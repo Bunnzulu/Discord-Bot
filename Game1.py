@@ -1,5 +1,5 @@
 import random
-import re
+import time
 class NumberGuesserGame():
     def __init__(self):
         self.HighNumber = ""
@@ -37,6 +37,17 @@ class NumberGuesserGame():
             self.Active = False
             self.UserGuesses = 0
             self.AIGuesses = 0
+
+    def AIGuess(self):
+        time.sleep(5)
+        self.AIGuesses += 1
+        if random.randint(self.AILowNumber,self.AIHighNumber) > self.Number:
+            pass
+
+    def VerifyPickedNumber(self,num):
+        if num > self.HighNumber or num < self.LowNumber: return False
+        self.Number = num
+        return True
 
 def UserInput_StoN(message):
     result = int(message)

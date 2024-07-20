@@ -49,8 +49,20 @@ async def on_message(message):
                         await message.channel.send(f"Guesses made:{Game1.UserGuesses}")
                         if Game1.NumberGuessed:
                             await message.channel.send("Now it's my turn")
+                            await message.channel.send("Pick your number")
                             Game1.Reset()
-
-
+        elif Game1.Turn == "Bot":
+            if message.content.startswith('$'):
+                if Game1.AIHighNumber == 0 and not message.content.startswith('$0'):
+                    if Game1.VerifyPickedNumber(UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])):
+                        Game1.AIHighNumber = Game1.HighNumber
+                        Game1.AILowNumber = Game1.LowNumber
+                        await message.channel.send("I'm going to start guessing")
+                        await message.channel.send("Hint: type $BotGuess to continue")
+                    else:
+                        await message.channel.send("Invalid Input")
+                        await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
+                elif message.content.startswith('$BotGuess'):
+                    pass
 
 client.run(os.getenv("TOKEN"))
