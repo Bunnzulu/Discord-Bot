@@ -1,2 +1,4 @@
 # Discord Bot
- A practice discord bot in python
+ A discord bot in python
+ Has the ability to play a number guessing game w/ you
+
