@@ -29,16 +29,17 @@ async def on_message(message):
         Game1.Active = True
         await message.channel.send('Pick how high the number can go\n(Highest number is 100)')
     
-    if Game1.Active:
+    elif Game1.Active:
         if Game1.Turn == "User":
-            if message.content.startswith(f'${re.compile("[1-9]/d{1, 2}")}'):
-                if Game1.HighNumber == "": 
-                    Game1.HighNumber = UserInput_StoN(message)
-                    await message.channel.send('Pick how low the number can go(Lowest number is 0)')
-                elif Game1.LowNumber == "": 
-                    Game1.LowNumber = UserInput_StoN(message)
-                    await message.channel.send("Let's play")
-                    await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
+            if message.content.startswith('$') and not message.content.startswith('$0'):
+                if len(re.findall(r'\d{1,3}',message.content)):
+                    if Game1.HighNumber == "": 
+                        Game1.HighNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
+                        await message.channel.send('Pick how low the number can go(Lowest number is 0)')
+                    elif Game1.LowNumber == "": 
+                        Game1.LowNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
+                        await message.channel.send("Let's play")
+                        await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
 
 
 client.run(os.getenv("TOKEN"))

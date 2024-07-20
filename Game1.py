@@ -1,5 +1,5 @@
 import random
-
+import re
 class NumberGuesserGame():
     def __init__(self):
         self.HighNumber = ""
@@ -23,13 +23,6 @@ class NumberGuesserGame():
     
 
 def UserInput_StoN(message):
-    try:
-        result = int(message[1:4])
-    except:
-        try:
-            result = int(message[1:3])
-        except:
-            try:
-                result = int(message[1:1])
-            except:print(message)
+    result = int(message)
+    print(message)
     return result
