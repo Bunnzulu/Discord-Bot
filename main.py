@@ -41,9 +41,9 @@ async def on_message(message):
                             Game1.LowNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
                             await message.channel.send("Let's play")
                             Game1.Pick_random_Number()
-                            await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
+                            await message.channel.send(f"Highest Number: {Game1.HighNumber} and Lowest Number: {Game1.LowNumber}")
                             await message.channel.send("Start guessing")
-                elif not Game1.NumberGuessed:
+                elif not Game1.NumberGuessed and "" not in (Game1.HighNumber,Game1.LowNumber):
                     if len(re.findall(r'\d{1,3}',message.content)):
                         await message.channel.send(Game1.UserGuess(UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])))
                         await message.channel.send(f"Guesses made:{Game1.UserGuesses}")
@@ -63,6 +63,11 @@ async def on_message(message):
                         await message.channel.send("Invalid Input")
                         await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
                 elif message.content.startswith('$BotGuess'):
-                    pass
+                    while not Game1.NumberGuessed:
+                        await message.channel.send(Game1.AIGuess())
+                    await message.channel.send(f"You took {Game1.UserGuesses} guesses and I took {Game1.AIGuesses} guesses")
+                    await message.channel.send(Game1.Winner())
+                    await message.channel.send("Game over!")
+                    Game1.Reset(True)
 
 client.run(os.getenv("TOKEN"))

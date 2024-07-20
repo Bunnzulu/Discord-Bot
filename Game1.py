@@ -25,8 +25,6 @@ class NumberGuesserGame():
         else:return "Too Low"
     
     def Reset(self,EndGame:bool=False):
-        self.HighNumber = ""
-        self.LowNumber = ""
         self.Number = 0
         self.NumberGuessed = False
         self.Turn = "Bot"
@@ -37,12 +35,27 @@ class NumberGuesserGame():
             self.Active = False
             self.UserGuesses = 0
             self.AIGuesses = 0
+            self.HighNumber = ""
+            self.LowNumber = ""
 
     def AIGuess(self):
         time.sleep(5)
         self.AIGuesses += 1
-        if random.randint(self.AILowNumber,self.AIHighNumber) > self.Number:
-            pass
+        Guess = random.randint(self.AILowNumber,self.AIHighNumber)
+        if Guess > self.Number:
+            self.AIHighNumber = Guess - 1
+            return f"{Guess}, No that's too high"
+        elif Guess == self.Number:
+            self.NumberGuessed = True
+            return f"{Guess}, Got it!"
+        else:
+            self.AILowNumber = Guess + 1
+            return f"{Guess}, No that's too low!"
+
+    def Winner(self):
+        if self.UserGuesses > self.AIGuesses: return "So I win!"
+        elif self.UserGuesses < self.AIGuesses: return "So you win!"
+        else:return "So it's a tie"
 
     def VerifyPickedNumber(self,num):
         if num > self.HighNumber or num < self.LowNumber: return False
@@ -51,5 +64,4 @@ class NumberGuesserGame():
 
 def UserInput_StoN(message):
     result = int(message)
-    print(message)
     return result
