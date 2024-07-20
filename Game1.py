@@ -11,6 +11,7 @@ class NumberGuesserGame():
         self.NumberGuessed = False
         self.Active = False
         self.UserGuesses = 0
+        self.AIGuesses = 0
     
     def Pick_random_Number(self):
         self.Number = random.randint(self.LowNumber,self.HighNumber)
@@ -18,9 +19,24 @@ class NumberGuesserGame():
     def UserGuess(self,Guess:int) -> str:
         self.UserGuesses += 1
         if Guess > self.Number:return "Too High"
-        if Guess == self.Number:return "That's it"
+        if Guess == self.Number:
+            self.NumberGuessed = True
+            return "That's it"
         else:return "Too Low"
     
+    def Reset(self,EndGame:bool=False):
+        self.HighNumber = ""
+        self.LowNumber = ""
+        self.Number = 0
+        self.NumberGuessed = False
+        self.Turn = "Bot"
+        if EndGame:
+            self.AIHighNumber = 0
+            self.AILowNumber = 0
+            self.Turn = ""
+            self.Active = False
+            self.UserGuesses = 0
+            self.AIGuesses = 0
 
 def UserInput_StoN(message):
     result = int(message)

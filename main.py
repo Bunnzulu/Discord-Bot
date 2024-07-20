@@ -27,19 +27,30 @@ async def on_message(message):
     if message.content.startswith('$Game1') and not Game1.Active:
         Game1.Turn = "User"
         Game1.Active = True
-        await message.channel.send('Pick how high the number can go\n(Highest number is 100)')
+        await message.channel.send('Pick how high the number can go\n(Highest number is 999)')
     
     elif Game1.Active:
         if Game1.Turn == "User":
-            if message.content.startswith('$') and not message.content.startswith('$0'):
-                if len(re.findall(r'\d{1,3}',message.content)):
-                    if Game1.HighNumber == "": 
-                        Game1.HighNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
-                        await message.channel.send('Pick how low the number can go(Lowest number is 0)')
-                    elif Game1.LowNumber == "": 
-                        Game1.LowNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
-                        await message.channel.send("Let's play")
-                        await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
+            if message.content.startswith('$'):
+                if not message.content.startswith('$0') and Game1.LowNumber == "":
+                    if len(re.findall(r'\d{1,3}',message.content)):
+                        if Game1.HighNumber == "": 
+                            Game1.HighNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
+                            await message.channel.send('Pick how low the number can go\n(Lowest number is 1)')
+                        elif Game1.LowNumber == "": 
+                            Game1.LowNumber = UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])
+                            await message.channel.send("Let's play")
+                            Game1.Pick_random_Number()
+                            await message.channel.send(f"Highest Number:{Game1.HighNumber} and Lowest Number:{Game1.LowNumber}")
+                            await message.channel.send("Start guessing")
+                elif not Game1.NumberGuessed:
+                    if len(re.findall(r'\d{1,3}',message.content)):
+                        await message.channel.send(Game1.UserGuess(UserInput_StoN(re.findall(r'\d{1,3}',message.content)[0])))
+                        await message.channel.send(f"Guesses made:{Game1.UserGuesses}")
+                        if Game1.NumberGuessed:
+                            await message.channel.send("Now it's my turn")
+                            Game1.Reset()
+
 
 
 client.run(os.getenv("TOKEN"))
