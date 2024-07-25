@@ -7,6 +7,7 @@ file.close()
 
 class Wordle:
     def __init__(self):
+        self.Active = False
         self.Word = random.choice(WORDCHOICES).upper()
         self.Guesses = 0
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
@@ -28,5 +29,21 @@ class Wordle:
     
     def Display_Green(self):
         if self.WrongMessage["Green"][0] > 0:
-            pass
+            return "The right letters in the right spot are",self.WrongMessage["Green"][1]
+        else: return "No right letters are in right positions"
+    
+    def Display_Yellow(self):
+        if self.WrongMessage["Yellow"][0] > 0:
+            return "The right letters in the wrong spot are",self.WrongMessage["Yellow"][1]
+        else: return "No right letters are in wrong positions"
+
+    def Display_Red(self):
+        if self.WrongMessage["Red"][0] > 0:
+            return "The wrong letters are",self.WrongMessage["Red"][1]
+        else: return "No wrong letters are here"
+
+    def Random_Word(self):
+        self.Word = random.choice(WORDCHOICES).upper()
+        self.Guesses = 0
+        self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
 

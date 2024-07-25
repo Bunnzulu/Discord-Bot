@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import re
 from Game1 import NumberGuesserGame,UserInput_StoN
+from Game2 import Wordle
 load_dotenv(".env")
 
 intents = discord.Intents.default()
@@ -11,6 +12,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 Game1 = {}
+Game2 = Wordle()
 
 @client.event
 async def on_ready():
@@ -33,6 +35,10 @@ async def on_message(message):
             await message.channel.send(f'{message.author.mention}, Pick how high the number can go\n(Highest number is 999)')
         else:
             await message.channel.send(f'{message.author.mention}, you already have an active game.')
+    
+    if message.content.startswith('$Game2') and not Game2.Active:
+        Game2.Active = True
+        await message.channel.send(f'{message.author.mention}, ')
     
     elif user_id in Game1 and Game1[user_id].Active:
         if Game1[user_id].Turn == "User":
