@@ -11,7 +11,7 @@ class Wordle:
         self.Word = random.choice(WORDCHOICES).upper()
         self.Guesses = 6
         self.GuessCorrect = False
-        self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
+        self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
     
     def Check_Guess(self,guess):
         self.Guesses -= 1
@@ -28,7 +28,9 @@ class Wordle:
         elif letter in self.Word and ((letter not in self.WrongMessage["Yellow"][2] and letter not in self.WrongMessage["Green"][2]) or self.Word.count(letter) > 2): 
             self.WrongMessage["Yellow"] = [self.WrongMessage["Yellow"][0] + 1,self.WrongMessage["Yellow"][1].append(pos),self.WrongMessage["Yellow"][2] + letter]
         else:
-            self.WrongMessage["Red"] = [self.WrongMessage["Red"][0] + 1,self.WrongMessage["Red"][1].append(pos),self.WrongMessage["Red"][2] + letter]
+            self.WrongMessage["Red"][0] += 1
+            self.WrongMessage["Red"][1].append(pos)
+            self.WrongMessage["Red"][2] += letter
     
     def Display_Green(self):
         if self.WrongMessage["Green"][0] > 0:
@@ -51,5 +53,5 @@ class Wordle:
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
 
     def Valid_Word(self,Word):
-        if Word in WORDCHOICES: return True
+        if Word.upper() in WORDCHOICES: return True
         else: return False
