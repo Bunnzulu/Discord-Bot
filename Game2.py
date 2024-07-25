@@ -9,7 +9,7 @@ class Wordle:
     def __init__(self):
         self.Word = random.choice(WORDCHOICES).upper()
         self.Guesses = 0
-        self.WrongMessage = {"Green":[0,""],"Yellow":[0,""],"Red":[0,""]}
+        self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
     
     def Check_Guess(self,guess):
         self.Guesses += 1
@@ -18,4 +18,6 @@ class Wordle:
             pass
     
     def Check_Letter(self,letter,pos):
-        pass
+        if letter == self.Word[pos]: self.WrongMessage["Green"] = [self.WrongMessage["Green"][0] + 1,self.WrongMessage["Green"][1].append(pos),self.WrongMessage["Green"][2] + self.Word[pos]]
+        elif letter in self.Word and self.WrongMessage["Yellow"][3]: 
+            self.WrongMessage["Yellow"] = [self.WrongMessage["Green"][0] + 1,pos]
