@@ -86,10 +86,21 @@ async def on_message(message):
     elif Game2.Active:
         if message.content.startswith('$'):
             if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2.Guesses} guesses left")
-            if len(message.content) == 6:
+            if len(message.content) == 6 and not Game2.GuessCorrect and Game2.Guesses > 0:
                 if Game2.Valid_Word(message.content[1:]):
-                    pass
+                    await message.channel.send(Game2.Check_Guess(message.content[1:]))
+                    if not Game2.GuessCorrect:
+                        await message.channel.send(Game2.Display_Green())
+                        await message.channel.send(Game2.Display_Yellow())
+                        await message.channel.send(Game2.Display_Red())
+                    else:
+                        await message.channel.send("Thanks for playing")
+                        Game2.Active = False
                 else:await message.channel.send("Invalid word")
+            if Game2.Guesses == 0:
+                await message.channel.send(f"The word was {Game2.Word}")
+                await message.channel.send("Thanks for playing")
+                Game2.Active = False
 
 
 

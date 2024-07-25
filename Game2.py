@@ -10,11 +10,14 @@ class Wordle:
         self.Active = False
         self.Word = random.choice(WORDCHOICES).upper()
         self.Guesses = 6
+        self.GuessCorrect = False
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
     
     def Check_Guess(self,guess):
-        self.Guesses += 1
-        if guess.upper() == self.Word:return f"Correct!. The word was {self.Word}"
+        self.Guesses -= 1
+        if guess.upper() == self.Word:
+            self.GuessCorrect = True
+            return f"Correct!. The word was {self.Word}"
         else:
             for index,i in enumerate(guess.upper()): self.Check_Letter(i,index)
             return "Incorrect"
