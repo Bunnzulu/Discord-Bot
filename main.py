@@ -40,7 +40,7 @@ async def on_message(message):
         Game2.Active = True
         await message.channel.send(f"{message.author.mention}, let's play")
         await message.channel.send("Hint: Start guessing 5-letter words, start with $")
-        await message.channel.send("All uppercase")
+        await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
     
     elif user_id in Game1 and Game1[user_id].Active:
         if Game1[user_id].Turn == "User":
@@ -87,13 +87,13 @@ async def on_message(message):
         if message.content.startswith('$'):
             if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2.Guesses} guesses left")
             if len(message.content) == 6 and not Game2.GuessCorrect and Game2.Guesses > 0:
-                print(message.content[1:])
                 if Game2.Valid_Word(message.content[1:]):
                     await message.channel.send(Game2.Check_Guess(message.content[1:]))
                     if not Game2.GuessCorrect:
                         await message.channel.send(Game2.Display_Green())
                         await message.channel.send(Game2.Display_Yellow())
                         await message.channel.send(Game2.Display_Red())
+                        Game2.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
                     else:
                         await message.channel.send("Thanks for playing")
                         Game2.Active = False
