@@ -9,14 +9,14 @@ class Wordle:
     def __init__(self):
         self.Active = False
         self.Word = random.choice(WORDCHOICES).upper()
-        self.Guesses = 0
+        self.Guesses = 6
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
     
     def Check_Guess(self,guess):
         self.Guesses += 1
         if guess.upper() == self.Word:return f"Correct!. The word was {self.Word}"
         else:
-            for index,i in enumerate(self.Word): self.Check_Letter(i,index)
+            for index,i in enumerate(guess.upper()): self.Check_Letter(i,index)
             return "Incorrect"
     
     def Check_Letter(self,letter:str,pos:int):
@@ -47,3 +47,6 @@ class Wordle:
         self.Guesses = 0
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
 
+    def Valid_Word(self,Word):
+        if Word in WORDCHOICES: return True
+        else: return False

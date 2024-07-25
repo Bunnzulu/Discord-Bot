@@ -36,9 +36,11 @@ async def on_message(message):
         else:
             await message.channel.send(f'{message.author.mention}, you already have an active game.')
     
-    if message.content.startswith('$Game2') and not Game2.Active:
+    if message.content.startswith('$Game2') and not (Game2.Active or  Game1[user_id].Active):
         Game2.Active = True
-        await message.channel.send(f'{message.author.mention}, ')
+        await message.channel.send(f"{message.author.mention}, let's play")
+        await message.channel.send("Hint: Start guessing 5-letter words, start with $")
+        await message.channel.send("Capitalize the first letter of word")
     
     elif user_id in Game1 and Game1[user_id].Active:
         if Game1[user_id].Turn == "User":
@@ -81,6 +83,13 @@ async def on_message(message):
                     await message.channel.send(f"{message.author.mention}, Game over!")
                     Game1[user_id].Reset(True)
 
+    elif Game2.Active:
+        if message.content.startswith('$'):
+            if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2.Guesses} guesses left")
+            if len(message.content) == 6:
+                if Game2.Valid_Word(message.content[1:]):
+                    pass
+                else:await message.channel.send("Invalid word")
 
 
 
