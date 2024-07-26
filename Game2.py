@@ -22,7 +22,7 @@ class Wordle:
             for index,i in enumerate(guess.upper()): self.Check_Letter(i,index)
             print("------------")
             return "Incorrect"
-    
+    #if self.Word.count(letter) == 2 and (self.WrongMessage["Yellow"][2].count(letter) + self.WrongMessage["Green"][2].count(letter)) < 2
     def Check_Letter(self,letter:str,pos:int):
         print(letter,pos)
         print(self.Word)
@@ -30,10 +30,11 @@ class Wordle:
             self.WrongMessage["Green"][0] += 1
             self.WrongMessage["Green"][1].append(pos + 1)
             self.WrongMessage["Green"][2] += letter
-        elif letter in self.Word and ((letter not in self.WrongMessage["Yellow"][2] or self.Word.count(letter) > 2) and letter not in self.WrongMessage["Green"][2]): 
-            self.WrongMessage["Yellow"][0] += 1
-            self.WrongMessage["Yellow"][1].append(pos + 1)
-            self.WrongMessage["Yellow"][2] += letter
+        elif letter in self.Word:
+            if True: 
+                self.WrongMessage["Yellow"][0] += 1
+                self.WrongMessage["Yellow"][1].append(pos + 1)
+                self.WrongMessage["Yellow"][2] += letter
         else:
             self.WrongMessage["Red"][0] += 1
             self.WrongMessage["Red"][1].append(pos + 1)

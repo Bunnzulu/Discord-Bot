@@ -93,7 +93,7 @@ async def on_message(message):
                         await message.channel.send(Game2.Display_Green())
                         await message.channel.send(Game2.Display_Yellow())
                         await message.channel.send(Game2.Display_Red())
-                        Game2.WrongMessage = {"Green":[0,[],""],"Yellow":[0,""],"Red":[0,""]}
+                        Game2.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
                     else:
                         await message.channel.send("Thanks for playing")
                         Game2.Active = False
