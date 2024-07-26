@@ -17,6 +17,7 @@ Game2 = Wordle()
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+    print(client.get_channel)
 
 @client.event
 async def on_message(message):

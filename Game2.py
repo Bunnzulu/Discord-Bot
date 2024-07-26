@@ -8,7 +8,7 @@ file.close()
 class Wordle:
     def __init__(self):
         self.Active = False
-        self.Word = random.choice(WORDCHOICES).upper()
+        self.Word = "STEEL"#random.choice(WORDCHOICES).upper()
         self.Guesses = 6
         self.GuessCorrect = False
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
@@ -20,21 +20,17 @@ class Wordle:
             return f"Correct!. The word was {self.Word}"
         else:
             for index,i in enumerate(guess.upper()): self.Check_Letter(i,index)
-            print("------------")
             return "Incorrect"
-    #if self.Word.count(letter) == 2 and (self.WrongMessage["Yellow"][2].count(letter) + self.WrongMessage["Green"][2].count(letter)) < 2
+        
     def Check_Letter(self,letter:str,pos:int):
-        print(letter,pos)
-        print(self.Word)
         if letter == self.Word[pos]: 
             self.WrongMessage["Green"][0] += 1
             self.WrongMessage["Green"][1].append(pos + 1)
             self.WrongMessage["Green"][2] += letter
-        elif letter in self.Word:
-            if True: 
-                self.WrongMessage["Yellow"][0] += 1
-                self.WrongMessage["Yellow"][1].append(pos + 1)
-                self.WrongMessage["Yellow"][2] += letter
+        elif letter in self.Word and (self.WrongMessage["Yellow"][2].count(letter) + self.WrongMessage["Green"][2].count(letter)) < self.Word.count(letter): 
+            self.WrongMessage["Yellow"][0] += 1
+            self.WrongMessage["Yellow"][1].append(pos + 1)
+            self.WrongMessage["Yellow"][2] += letter
         else:
             self.WrongMessage["Red"][0] += 1
             self.WrongMessage["Red"][1].append(pos + 1)
