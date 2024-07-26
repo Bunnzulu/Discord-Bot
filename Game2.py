@@ -8,7 +8,7 @@ file.close()
 class Wordle:
     def __init__(self):
         self.Active = False
-        self.Word = "STEEL"#random.choice(WORDCHOICES).upper()
+        self.Word = random.choice(WORDCHOICES).upper()
         self.Guesses = 6
         self.GuessCorrect = False
         self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
