@@ -22,6 +22,13 @@ class Wordle:
             for index,i in enumerate(guess.upper()): self.Check_Letter(i,index)
             return "Incorrect"
         
+    def Reset(self):
+        self.Active = False
+        self.Word = random.choice(WORDCHOICES).upper()
+        self.Guesses = 6
+        self.GuessCorrect = False
+        self.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
+
     def Check_Letter(self,letter:str,pos:int):
         if letter == self.Word[pos]: 
             self.WrongMessage["Green"][0] += 1

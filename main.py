@@ -12,12 +12,13 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 Game1 = {}
-Game2 = Wordle()
+Game2 = {}
+
+
 
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
-    print(client.get_channel)
 
 @client.event
 async def on_message(message):
@@ -28,7 +29,7 @@ async def on_message(message):
     if message.content.startswith('$Hello'):
         await message.channel.send('Hello!')
     
-    if message.content.startswith('$Game1'):
+    if message.content.startswith('$Game1') and (user_id not in Game2 or not Game2[user_id].Active):
         if user_id not in Game1 or not Game1[user_id].Active:
             Game1[user_id] = NumberGuesserGame()
             Game1[user_id].Active = True
@@ -37,11 +38,13 @@ async def on_message(message):
         else:
             await message.channel.send(f'{message.author.mention}, you already have an active game.')
     
-    if message.content.startswith('$Game2') and not Game2.Active:
-        Game2.Active = True
-        await message.channel.send(f"{message.author.mention}, let's play")
-        await message.channel.send("Hint: Start guessing 5-letter words, start with $")
-        await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
+    if message.content.startswith('$Game2') and not Game2[user_id].Active:
+        if user_id not in Game2 or not Game2[user_id].Active:
+            Game2[user_id] = Wordle()
+            Game2[user_id].Active = True
+            await message.channel.send(f"{message.author.mention}, let's play")
+            await message.channel.send("Hint: Start guessing 5-letter words, start with $")
+            await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
     
     elif user_id in Game1 and Game1[user_id].Active:
         if Game1[user_id].Turn == "User":
@@ -84,25 +87,25 @@ async def on_message(message):
                     await message.channel.send(f"{message.author.mention}, Game over!")
                     Game1[user_id].Reset(True)
 
-    elif Game2.Active:
+    elif Game2[user_id].Active:
         if message.content.startswith('$'):
-            if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2.Guesses} guesses left")
-            if len(message.content) == 6 and not Game2.GuessCorrect and Game2.Guesses > 0:
-                if Game2.Valid_Word(message.content[1:]):
-                    await message.channel.send(Game2.Check_Guess(message.content[1:]))
-                    if not Game2.GuessCorrect:
-                        await message.channel.send(Game2.Display_Green())
-                        await message.channel.send(Game2.Display_Yellow())
-                        await message.channel.send(Game2.Display_Red())
-                        Game2.WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
+            if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2[user_id].Guesses} guesses left")
+            if len(message.content) == 6 and not Game2[user_id].GuessCorrect and Game2[user_id].Guesses > 0:
+                if Game2[user_id].Valid_Word(message.content[1:]):
+                    await message.channel.send(Game2[user_id].Check_Guess(message.content[1:]))
+                    if not Game2[user_id].GuessCorrect:
+                        await message.channel.send(Game2[user_id].Display_Green())
+                        await message.channel.send(Game2[user_id].Display_Yellow())
+                        await message.channel.send(Game2[user_id].Display_Red())
+                        Game2[user_id].WrongMessage = {"Green":[0,[],""],"Yellow":[0,[],""],"Red":[0,[],""]}
                     else:
                         await message.channel.send("Thanks for playing")
-                        Game2.Active = False
+                        Game2[user_id].Active = False
                 else:await message.channel.send("Invalid word")
-            if Game2.Guesses == 0:
-                await message.channel.send(f"The word was {Game2.Word}")
+            if Game2[user_id].Guesses == 0:
+                await message.channel.send(f"The word was {Game2[user_id].Word}")
                 await message.channel.send("Thanks for playing")
-                Game2.Active = False
+                Game2[user_id].Reset()
 
 
 
