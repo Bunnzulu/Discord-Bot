@@ -61,6 +61,7 @@ class Quiz:
         self.Active = False
         self.Question = ""
         self.Answered = False
+        self.Complete = False
         self.Answers = []
         self.UsedQuestions =[]
     
@@ -70,14 +71,19 @@ class Quiz:
         self.Answers = QUESTIONSHEET[self.Question]
         self.UsedQuestions.append(self.Question)
     
+    def ShowQuestion(self):
+        return f"Question {self.QNumber}: {self.Question}\n{self.Answers[0]}\n{self.Answers[1]}\n{self.Answers[2]}\n{self.Answers[3]}"
+    
     def CheckAnswer(self,Guess):
         if Guess not in self.Answers: return "Not an option"
         else:
             self.Answered = True
+            self.QNumber += 1
             if Guess == ANSWERSHEET[self.Question]: 
                 self.Score += 1
                 return "Correct"
             else: return f"Incorrect, the right answer was {ANSWERSHEET[self.Question]}"
+    
     
     def Reset(self):
         self.Score = 0

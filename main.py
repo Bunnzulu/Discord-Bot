@@ -4,6 +4,7 @@ import os
 import re
 from Game1 import NumberGuesserGame,UserInput_StoN
 from Game2 import Wordle
+from Game3 import Quiz
 load_dotenv(".env")
 
 intents = discord.Intents.default()
@@ -13,7 +14,7 @@ client = discord.Client(intents=intents)
 
 Game1 = {}
 Game2 = {}
-
+Game3 = Quiz()
 
 
 @client.event
@@ -45,6 +46,13 @@ async def on_message(message):
             await message.channel.send(f"{message.author.mention}, let's play")
             await message.channel.send("Hint: Start guessing 5-letter words, start with $")
             await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
+    
+    if message.content.startswith('$Game2') and not Game3.Active:
+        Game3.Active = True
+        Game3.GetQuestion()
+        await message.channel.send(f"Quiz is starting")
+        await message.channel.send(f"{message.author.mention}\n {Game3.ShowQuestion()}")
+        await message.channel.send("Type $(YourAnswerhere) to answer question")
     
     elif user_id in Game1 and Game1[user_id].Active:
         if Game1[user_id].Turn == "User":
@@ -87,7 +95,7 @@ async def on_message(message):
                     await message.channel.send(f"{message.author.mention}, Game over!")
                     Game1[user_id].Reset(True)
 
-    elif Game2[user_id].Active:
+    elif user_id in Game2 and Game2[user_id].Active:
         if message.content.startswith('$'):
             if message.content.startswith("$ShowGuess"):await message.channel.send(f"You have {Game2[user_id].Guesses} guesses left")
             if len(message.content) == 6 and not Game2[user_id].GuessCorrect and Game2[user_id].Guesses > 0:
@@ -106,7 +114,18 @@ async def on_message(message):
                 await message.channel.send(f"The word was {Game2[user_id].Word}")
                 await message.channel.send("Thanks for playing")
                 Game2[user_id].Reset()
-
-
+    
+    elif Game3.Active:
+        if message.content.startswith('$'):
+            await message.channel.send(Game3.CheckAnswer(message.content[1:]))
+            if Game3.Answered: 
+                Game3.Answered = False
+                if Game3.QNumber == 11: Game3.Complete = True
+                else:
+                    Game3.GetQuestion()
+                    await message.channel.send(f"{message.author.mention}\n {Game3.ShowQuestion()}")
+            if Game3.Complete:
+                await message.channel.send(f"Quiz complete\n Score:{Game3.Score}/10")
+                Game3.Reset()
 
 client.run(os.getenv("TOKEN"))
