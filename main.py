@@ -15,12 +15,21 @@ client = discord.Client(intents=intents)
 GuessingGame = {}
 wordle = {}
 quiz = {}
-quiz = Quiz()
 
+def MultiCheck(user_id,Groups):
+    for group in Groups:
+        if user_id in group and group[user_id].Active: return False
+    return True
+
+ChosenChannel = "ChannelName"
 
 @client.event
 async def on_ready():
+    channels = list(client.get_all_channels())
     print(f'We have logged in as {client.user}')
+    for channel in channels:
+        if channel.name == ChosenChannel:
+            await channel.send("Commands: $Hello, $GuessingGame, $Wordle, $Quiz")
 
 @client.event
 async def on_message(message):
@@ -31,28 +40,29 @@ async def on_message(message):
     if message.content.startswith('$Hello'):
         await message.channel.send('Hello!')
     
-    if message.content.startswith('$GuessingGame') and (user_id not in wordle or not wordle[user_id].Active):
+    if message.content.startswith('$GuessingGame') and MultiCheck(user_id,[GuessingGame,wordle,quiz]):
         if user_id not in GuessingGame or not GuessingGame[user_id].Active:
             GuessingGame[user_id] = NumberGuesserGame()
             GuessingGame[user_id].Active = True
             GuessingGame[user_id].Turn = "User"
-            await message.channel.send(f'{message.author.mention}, Pick how high the number can go\n(Highest number is 999)')
+            await message.channel.send(f'{message.author.mention}, Pick how high the number can go\n(Highest number is 999)\n $Number')
         else:
             await message.channel.send(f'{message.author.mention}, you already have an active game.')
     
-    if message.content.startswith('$Wordle'):
+    if message.content.startswith('$Wordle') and MultiCheck(user_id,[GuessingGame,wordle,quiz]):
         if user_id not in wordle or not wordle[user_id].Active:
             wordle[user_id] = Wordle()
             wordle[user_id].Active = True
             await message.channel.send(f"{message.author.mention}, let's play")
-            await message.channel.send("Hint: Start guessing 5-letter words, start with $")
+            await message.channel.send("Hint: Start guessing 5-letter words, start with $\n $Guess")
             await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
     
-    if message.content.startswith('$Quiz') and not quiz.Active:
-        quiz.Active = True
-        quiz.GetQuestion()
+    if message.content.startswith('$Quiz') and MultiCheck(user_id,[GuessingGame,wordle,quiz]):
+        quiz[user_id] = Quiz()
+        quiz[user_id].Active = True
+        quiz[user_id].GetQuestion()
         await message.channel.send(f"Quiz is starting")
-        await message.channel.send(f"{message.author.mention}\n {quiz.ShowQuestion()}")
+        await message.channel.send(f"{message.author.mention}\n {quiz[user_id].ShowQuestion()}")
         await message.channel.send("Type $(YourAnswerhere) to answer question")
     
     elif user_id in GuessingGame and GuessingGame[user_id].Active:
@@ -117,17 +127,17 @@ async def on_message(message):
                 await message.channel.send("Thanks for playing")
                 wordle[user_id].Reset()
     
-    elif quiz.Active:
+    elif user_id in quiz and quiz[user_id].Active:
         if message.content.startswith('$'):
-            await message.channel.send(quiz.CheckAnswer(message.content[1:]))
-            if quiz.Answered: 
-                quiz.Answered = False
-                if quiz.QNumber == 11: quiz.Complete = True
+            await message.channel.send(f"{message.author.mention},{quiz[user_id].CheckAnswer(message.content[1:])}")
+            if quiz[user_id].Answered: 
+                quiz[user_id].Answered = False
+                if quiz[user_id].QNumber == 11: quiz[user_id].Complete = True
                 else:
-                    quiz.GetQuestion()
-                    await message.channel.send(f"{message.author.mention}\n {quiz.ShowQuestion()}")
-            if quiz.Complete:
-                await message.channel.send(f"Quiz complete\n Score:{quiz.Score}/10")
-                quiz.Reset()
+                    quiz[user_id].GetQuestion()
+                    await message.channel.send(f"{message.author.mention}\n {quiz[user_id].ShowQuestion()}")
+            if quiz[user_id].Complete:
+                await message.channel.send(f"{message.author.mention},Quiz complete\n Score:{quiz[user_id].Score}/10")
+                quiz[user_id].Reset()
 
 client.run(os.getenv("TOKEN"))
