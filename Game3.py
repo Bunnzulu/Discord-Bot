@@ -91,5 +91,6 @@ class Quiz:
         self.Active = False
         self.Question = ""
         self.Answered = False
+        self.Complete = False
         self.Answers = []
         self.UsedQuestions =[]
