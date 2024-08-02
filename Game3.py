@@ -83,8 +83,7 @@ class Quiz:
                 self.Score += 1
                 return "Correct"
             else: return f"Incorrect, the right answer was {ANSWERSHEET[self.Question]}"
-    
-    
+      
     def Reset(self):
         self.Score = 0
         self.QNumber = 1
