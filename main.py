@@ -47,7 +47,7 @@ async def on_message(message):
             await message.channel.send("Hint: Start guessing 5-letter words, start with $")
             await message.channel.send("Type $ShowGuess to see how many attempts you have left.")
     
-    if message.content.startswith('$Game2') and not Game3.Active:
+    if message.content.startswith('$Game3') and not Game3.Active:
         Game3.Active = True
         Game3.GetQuestion()
         await message.channel.send(f"Quiz is starting")
